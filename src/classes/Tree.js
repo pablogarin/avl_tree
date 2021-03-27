@@ -54,7 +54,6 @@ class Tree {
           parent.leftChild = node;
         }
       }
-      console.log()
       return this.balance(parent);
     }
     return node;
