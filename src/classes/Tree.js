@@ -41,32 +41,49 @@ class Tree {
 
   _add(node, parent) {
     if (parent) {
-      parent.add(node)
-      const balanceFactor = this.getBalanceFactor(parent);
-      if (Math.abs(balanceFactor) === 2) {
-        if (balanceFactor === 2) {
-          const subTreeFactor = this.getBalanceFactor(parent.rightChild);
-          if(subTreeFactor === -1) {
-            return this.rotateLeftRight(parent)
-          } else {
-            return this.rotateLeftLeft(parent)
-          }
-        } else if (balanceFactor === -2) {
-          const subTreeFactor = this.getBalanceFactor(parent.leftChild);
-          if(subTreeFactor === 1) {
-            return this.rotateRightLeft(parent)
-          } else {
-            return this.rotateRightRight(parent)
-          }
+      if (parent.value <= node.value) {
+        if (parent.rightChild) {
+          parent.rightChild = this._add(node, parent.rightChild);
+        } else {
+          parent.rightChild = node;
+        }
+      } else {
+        if (parent.leftChild) {
+          parent.leftChild = this._add(node, parent.leftChild);
+        } else {
+          parent.leftChild = node;
         }
       }
-      return parent;
+      console.log()
+      return this.balance(parent);
     }
     return node;
   }
 
   getBalanceFactor(node) {
     return this.getLevel(node.rightChild) - this.getLevel(node.leftChild);
+  }
+
+  balance(node) {
+    const balanceFactor = this.getBalanceFactor(node);
+    if (Math.abs(balanceFactor) === 2) {
+      if (balanceFactor === 2) {
+        const subTreeFactor = this.getBalanceFactor(node.rightChild);
+        if(subTreeFactor === -1) {
+          return this.rotateLeftRight(node)
+        } else {
+          return this.rotateLeftLeft(node)
+        }
+      } else if (balanceFactor === -2) {
+        const subTreeFactor = this.getBalanceFactor(node.leftChild);
+        if(subTreeFactor === 1) {
+          return this.rotateRightLeft(node)
+        } else {
+          return this.rotateRightRight(node)
+        }
+      }
+    }
+    return node;
   }
 
   rotateLeftLeft(node) {
