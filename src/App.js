@@ -3,7 +3,8 @@ import './App.css';
 import Tree from './classes/Tree';
 import Button from './components/styled/Button';
 import Form from './components/styled/Form';
-import Input from './components/styled/Input';
+import Input from './components/Input';
+import Title from './components/styled/Title';
 
 const initCanvas = (canvas) => {
   canvas.width = 400;
@@ -68,6 +69,7 @@ function App() {
   const valueRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
   const [tree, setTree] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -84,7 +86,7 @@ function App() {
       const value = valueRef.current.value;
       valueRef.current.value = ''
       if (!value) return;
-      if (isNaN(value)) return;
+      if (isNaN(value)) return setErrorMessage('Invalid value!');
       const intValue = parseInt(value,10);
       tree.add(intValue);
       cleanScreen(canvas)
@@ -94,9 +96,15 @@ function App() {
 
   return (
     <div className="App">
+      <Title>AVL Tree</Title>
       <canvas ref={canvasRef} />
       <Form onSubmit={addNode}>
-        <Input ref={valueRef} />
+        <Input
+          ref={valueRef}
+          label="Enter a value"
+          error={errorMessage}
+          onChange={() => setErrorMessage(null)}
+        />
         <Button type="submit">Add!</Button>
       </Form>
     </div>
